@@ -161,7 +161,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 =head1 VERSION
 
-version 0.001
+version 0.002
 
 =head1 SYNOPSIS
 
@@ -221,10 +221,10 @@ It can contains several C<has> functions.
 =head2 has
 
 This function creates the Gtk2 widget.
-In fact when you use this, C<Gtk2::XXX->new()> will be called.
+In fact when you use this, C<<Gtk2::XXX->new()>> will be called.
 See L<Gtk2> and Gtk2 API reference.
 
-Following code will call C<Gtk2::Window->new()>.
+Following code will call C<<Gtk2::Window->new()>>.
 
     my $app = build {
         has Window;
@@ -291,7 +291,7 @@ C<packing> is used for L<Gtk2::VBox> and L<Gtk2::HBox>.
 =head2 on
 
 This function connects signals for specified widget.
-Actually it is same as C<$widget->signal_connect>.
+Actually it is same as C<<$widget->signal_connect>>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
@@ -313,7 +313,7 @@ See L<Gtk2> and Gtk2 API reference.
 =head2 set
 
 This function sets properties for specified widget.
-Actually it is same as C<$widget->set_xxx>.
+Actually it is same as C<<$widget->set_xxx>>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
@@ -341,9 +341,9 @@ contain children widgets.
 
 =head1 SEE ALSO
 
-This module's idea is borrowed from L<http://advent.perl.kr/2010-12-24.html>.
-Someday L<Gtk2::Ex::Builder> will be released.
-And before that this colud be helpful for you
+The idea of this module is stealed from L<http://advent.perl.kr/2010-12-24.html>.
+I hope L<Gtk2::Ex::Builder> will be released by the article's author someday.
+And before release this module colud be helpful for you
 who likes Gtk2 but too lazy to type all code by his/her own hand.
 
 =head1 AUTHOR
