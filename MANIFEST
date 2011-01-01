@@ -1,0 +1,11 @@
+Changes
+LICENSE
+MANIFEST
+META.yml
+Makefile.PL
+README
+README.mkdn
+dist.ini
+lib/Acme/Gtk2/Ex/Builder.pm
+t/release-pod-coverage.t
+t/release-pod-syntax.t
