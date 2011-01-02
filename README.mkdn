@@ -4,7 +4,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 # VERSION
 
-version 0.004
+version 0.005
 
 # SYNOPSIS
 
@@ -15,15 +15,15 @@ version 0.004
     
 
     my $app = build {
-        widget Window => with {
-            meta id           => 'window';
+        widget Window => contain {
+            info id           => 'window';
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
             on   delete_event => sub { Gtk2->main_quit; };
     
 
-            widget Button => with {
+            widget Button => contain {
                 set label  => 'Action';
                 on clicked => sub { say 'Seoul Perl Mongers!' };
             };
@@ -39,11 +39,11 @@ version 0.004
 ## find
 
 Find and get widget by ID.
-You can find widget only you set `id` with `meta` function.
+You can find widget only you set `id` with `info` function.
 
     my $app = build {
-        widget Window => with {
-            meta id => 'my-window';
+        widget Window => contain {
+            info id => 'my-window';
         };
     };
     
@@ -78,11 +78,11 @@ Following code will call `Gtk2::Window->new`.
     };
 
 If you need more children widgets,
-use `with`, then call `widget` again and again.
+use `contain`, then call `widget` again and again.
 
     my $app = build {
-        widget Window with => {
-            widget HBox => with {
+        widget Window contain => {
+            widget HBox => contain {
                 widget Button;
                 widget Button;
                 widget Button;
@@ -97,8 +97,8 @@ additional `timestamp`, `nick` and `message` parameter.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
-        widget SimpleList => with {
-            meta id              => 'logviewer';
+        widget SimpleList => contain {
+            info id              => 'logviewer';
             set  headers_visible => FALSE;
             set  rules_hint      => TRUE;
         }, (
@@ -108,7 +108,7 @@ See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
         );
     };
 
-## meta
+## info
 
 This function sets additional information.
 Since it is not realted to Gtk2 functions,
@@ -120,18 +120,18 @@ Currently `id` and `packing` have some special meanings.
 `packing` is used for [Gtk2::VBox](http://search.cpan.org/perldoc?Gtk2::VBox) and [Gtk2::HBox](http://search.cpan.org/perldoc?Gtk2::HBox).
 
     my $app = build {
-        widget Window => with {
-            meta id             => 'window';
+        widget Window => contain {
+            info id             => 'window';
             set  title          => 'Seoul.pm irc log viewer';
         };
     
 
-        widget HBox => with {
-            meta id      => 'hbox';
-            meta packing => TRUE, TRUE, 1, 'start';
+        widget HBox => contain {
+            info id      => 'hbox';
+            info packing => TRUE, TRUE, 1, 'start';
     
 
-            widget ScrolledWindow => with {
+            widget ScrolledWindow => contain {
                 set policy => 'never', 'automatic';
             };
         };
@@ -144,14 +144,14 @@ Actually it is same as `$widget->signal_connect`.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
-        widget Window => with {
+        widget Window => contain {
             on   delete_event => sub { Gtk2->main_quit };
-            widget VBox => with {
-                widget ToggleButton => with {
+            widget VBox => contain {
+                widget ToggleButton => contain {
                     set  label   => "show/hide";
                     on   toggled => \&toggled;
                 };
-                widget Button => with {
+                widget Button => contain {
                     set  label   => 'Quit';
                     on   clicked => sub { Gtk2->main_quit };
                 };
@@ -166,22 +166,22 @@ Actually it is same as `$widget->set_xxx`.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
-        widget Window => with {
+        widget Window => contain {
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
         };
     };
 
-## with
+## contain
 
 This function is used to set attributes,
 connect signal, add additional information or
 contain children widgets.
 
     my $app = build {
-        widget Window => with {
-            meta   ...
+        widget Window => contain {
+            info   ...
             set    ...
             on     ...
             widget ...

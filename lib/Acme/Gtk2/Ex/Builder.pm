@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Acme::Gtk2::Ex::Builder;
 BEGIN {
-  $Acme::Gtk2::Ex::Builder::VERSION = '0.004';
+  $Acme::Gtk2::Ex::Builder::VERSION = '0.005';
 }
 # ABSTRACT: Funny Gtk2 Interface Design Module
 
@@ -11,11 +11,11 @@ use base qw( Exporter );
 
 our @EXPORT  = qw(
     build
-    widget
-    meta
+    contain
+    info
     on
     set
-    with
+    widget
 );
 
 sub find {
@@ -47,13 +47,13 @@ sub _current_pop {
     pop @{ $self->{_current} };
 }
  
-sub with (&) { @_ }
+sub contain (&) { @_ }
  
 sub build (&) {
     my $code = shift;
  
     my $self = bless {
-        _meta    => {},
+        _info    => {},
         _widget  => {},
         _current => [],
     }, __PACKAGE__;
@@ -88,7 +88,7 @@ sub build (&) {
  
         $self->_current_push( $widget );
  
-        local *_meta = sub {
+        local *_info = sub {
             my $key    = shift;
             my @values = @_;
  
@@ -106,7 +106,7 @@ sub build (&) {
                 default {
                 }
             }
-            $self->{_meta}{$self->_current}{$key} = \@values;
+            $self->{_info}{$self->_current}{$key} = \@values;
         };
  
         local *_on = sub ($&) {
@@ -143,12 +143,12 @@ sub _warn {
 }
  
 *_widget = _warn 'widget';
-*_meta   = _warn 'meta';
+*_info   = _warn 'info';
 *_on     = _warn 'on';
 *_set    = _warn 'set';
  
 sub widget { goto &_widget }
-sub meta   { goto &_meta   }
+sub info   { goto &_info   }
 sub on     { goto &_on     }
 sub set    { goto &_set    }
 
@@ -165,7 +165,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 =head1 VERSION
 
-version 0.004
+version 0.005
 
 =head1 SYNOPSIS
 
@@ -175,14 +175,14 @@ version 0.004
     use Acme::Gtk2::Ex::Builder;
     
     my $app = build {
-        widget Window => with {
-            meta id           => 'window';
+        widget Window => contain {
+            info id           => 'window';
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
             on   delete_event => sub { Gtk2->main_quit; };
     
-            widget Button => with {
+            widget Button => contain {
                 set label  => 'Action';
                 on clicked => sub { say 'Seoul Perl Mongers!' };
             };
@@ -197,11 +197,11 @@ version 0.004
 =head2 find
 
 Find and get widget by ID.
-You can find widget only you set C<id> with C<meta> function.
+You can find widget only you set C<id> with C<info> function.
 
     my $app = build {
-        widget Window => with {
-            meta id => 'my-window';
+        widget Window => contain {
+            info id => 'my-window';
         };
     };
     
@@ -235,11 +235,11 @@ Following code will call C<< Gtk2::Window->new >>.
     };
 
 If you need more children widgets,
-use C<with>, then call C<widget> again and again.
+use C<contain>, then call C<widget> again and again.
 
     my $app = build {
-        widget Window with => {
-            widget HBox => with {
+        widget Window contain => {
+            widget HBox => contain {
                 widget Button;
                 widget Button;
                 widget Button;
@@ -254,8 +254,8 @@ additional C<timestamp>, C<nick> and C<message> parameter.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        widget SimpleList => with {
-            meta id              => 'logviewer';
+        widget SimpleList => contain {
+            info id              => 'logviewer';
             set  headers_visible => FALSE;
             set  rules_hint      => TRUE;
         }, (
@@ -265,7 +265,7 @@ See L<Gtk2> and Gtk2 API reference.
         );
     };
 
-=head2 meta
+=head2 info
 
 This function sets additional information.
 Since it is not realted to Gtk2 functions,
@@ -277,16 +277,16 @@ C<id> is used for C<widget> method to find widget.
 C<packing> is used for L<Gtk2::VBox> and L<Gtk2::HBox>.
 
     my $app = build {
-        widget Window => with {
-            meta id             => 'window';
+        widget Window => contain {
+            info id             => 'window';
             set  title          => 'Seoul.pm irc log viewer';
         };
     
-        widget HBox => with {
-            meta id      => 'hbox';
-            meta packing => TRUE, TRUE, 1, 'start';
+        widget HBox => contain {
+            info id      => 'hbox';
+            info packing => TRUE, TRUE, 1, 'start';
     
-            widget ScrolledWindow => with {
+            widget ScrolledWindow => contain {
                 set policy => 'never', 'automatic';
             };
         };
@@ -299,14 +299,14 @@ Actually it is same as C<< $widget->signal_connect >>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        widget Window => with {
+        widget Window => contain {
             on   delete_event => sub { Gtk2->main_quit };
-            widget VBox => with {
-                widget ToggleButton => with {
+            widget VBox => contain {
+                widget ToggleButton => contain {
                     set  label   => "show/hide";
                     on   toggled => \&toggled;
                 };
-                widget Button => with {
+                widget Button => contain {
                     set  label   => 'Quit';
                     on   clicked => sub { Gtk2->main_quit };
                 };
@@ -321,22 +321,22 @@ Actually it is same as C<< $widget->set_xxx >>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        widget Window => with {
+        widget Window => contain {
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
         };
     };
 
-=head2 with
+=head2 contain
 
 This function is used to set attributes,
 connect signal, add additional information or
 contain children widgets.
 
     my $app = build {
-        widget Window => with {
-            meta   ...
+        widget Window => contain {
+            info   ...
             set    ...
             on     ...
             widget ...
