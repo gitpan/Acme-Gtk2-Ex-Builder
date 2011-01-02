@@ -1,5 +1,9 @@
 Revision history for Acme-Gtk2-Ex-Builder
 
+0.003     2011-01-02 15:22:50 Asia/Seoul
+    - Add omitted version number
+    - Set encoding for document
+
 0.002     2011-01-02 05:10:43 Asia/Seoul
     - Update the documents
 

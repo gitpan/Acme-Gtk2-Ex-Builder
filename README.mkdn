@@ -4,7 +4,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 # VERSION
 
-version 0.002
+version 0.003
 
 # SYNOPSIS
 
@@ -68,10 +68,10 @@ It can contains several `has` functions.
 ## has
 
 This function creates the Gtk2 widget.
-In fact when you use this, `<Gtk2::XXX-`new()>> will be called.
+In fact when you use this, `Gtk2::XXX->new` will be called.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
-Following code will call `<Gtk2::Window-`new()>>.
+Following code will call `Gtk2::Window->new`.
 
     my $app = build {
         has Window;
@@ -140,7 +140,7 @@ Currently `id` and `packing` have some special meanings.
 ## on
 
 This function connects signals for specified widget.
-Actually it is same as `<$widget-`signal_connect>>.
+Actually it is same as `$widget->signal_connect`.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
@@ -162,7 +162,7 @@ See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 ## set
 
 This function sets properties for specified widget.
-Actually it is same as `<$widget-`set_xxx>>.
+Actually it is same as `$widget->set_xxx`.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
@@ -190,10 +190,11 @@ contain children widgets.
 
 # SEE ALSO
 
-The idea of this module is stealed from [http://advent.perl.kr/2010-12-24.html](http://advent.perl.kr/2010-12-24.html).
-I hope [Gtk2::Ex::Builder](http://search.cpan.org/perldoc?Gtk2::Ex::Builder) will be released by the article's author someday.
-And before release this module colud be helpful for you
-who likes Gtk2 but too lazy to type all code by his/her own hand.
+The idea of this module is stealed from
+[Seoul.pm Perl Advent Calendar, 2010-12-24](http://advent.perl.kr/2010-12-24.html).
+I think [Gtk2::Ex::Builder](http://search.cpan.org/perldoc?Gtk2::Ex::Builder) will be released someday by the article's author.
+But before the release, this module colud be helpful for you
+who likes [Gtk2](http://search.cpan.org/perldoc?Gtk2) but too lazy to type all code by his/her own hands.
 
 # AUTHOR
 
