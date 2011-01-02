@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Acme::Gtk2::Ex::Builder;
 BEGIN {
-  $Acme::Gtk2::Ex::Builder::VERSION = '0.003';
+  $Acme::Gtk2::Ex::Builder::VERSION = '0.004';
 }
 # ABSTRACT: Funny Gtk2 Interface Design Module
 
@@ -11,14 +11,14 @@ use base qw( Exporter );
 
 our @EXPORT  = qw(
     build
-    has
+    widget
     meta
     on
     set
     with
 );
 
-sub widget {
+sub find {
     my $self   = shift;
     my $id     = shift;
     my $widget = shift;
@@ -61,7 +61,7 @@ sub build (&) {
     no strict 'subs';
     no warnings 'redefine';
  
-    local *_has = sub ($&) {
+    local *_widget = sub ($&) {
         my $class  = shift;
         my $_code  = shift;
         my @params = @_;
@@ -94,7 +94,7 @@ sub build (&) {
  
             given ($key) {
                 when ('id') {
-                    $self->widget($values[0], $self->_current);
+                    $self->find($values[0], $self->_current);
                 }
                 when ('packing') {
                     given (ref $self->_current(1)) {
@@ -142,15 +142,15 @@ sub _warn {
     sub { warn "you cannot call '$syntax' directly" };
 }
  
-*_has  = _warn 'has';
-*_meta = _warn 'meta';
-*_on   = _warn 'on';
-*_set  = _warn 'set';
+*_widget = _warn 'widget';
+*_meta   = _warn 'meta';
+*_on     = _warn 'on';
+*_set    = _warn 'set';
  
-sub has  { goto &_has  }
-sub meta { goto &_meta }
-sub on   { goto &_on   }
-sub set  { goto &_set  }
+sub widget { goto &_widget }
+sub meta   { goto &_meta   }
+sub on     { goto &_on     }
+sub set    { goto &_set    }
 
 1;
 
@@ -165,7 +165,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 =head1 VERSION
 
-version 0.003
+version 0.004
 
 =head1 SYNOPSIS
 
@@ -175,37 +175,37 @@ version 0.003
     use Acme::Gtk2::Ex::Builder;
     
     my $app = build {
-        has Window => with {
+        widget Window => with {
             meta id           => 'window';
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
             on   delete_event => sub { Gtk2->main_quit; };
     
-            has Button => with {
+            widget Button => with {
                 set label  => 'Action';
                 on clicked => sub { say 'Seoul Perl Mongers!' };
             };
         };
     };
     
-    $app->widget('window')->show_all;
+    $app->find('window')->show_all;
     Gtk2->main;
 
 =head1 METHODS
 
-=head2 widget
+=head2 find
 
-Get widget by ID.
+Find and get widget by ID.
 You can find widget only you set C<id> with C<meta> function.
 
     my $app = build {
-        has Window => with {
+        widget Window => with {
             meta id => 'my-window';
         };
     };
     
-    my $window = $app->widget('my-window');
+    my $window = $app->find('my-window');
 
 =head1 FUNCTIONS
 
@@ -213,16 +213,16 @@ You can find widget only you set C<id> with C<meta> function.
 
 This function acts like ordinary "new" method.
 It is exported by default and returns L<Acme::Gtk2::Ex::Builder> object.
-It can contains several C<has> functions.
+It can contains several C<widget> functions.
 
     my $app = build {
-        has Window;
-        has Dialog;
-        has FileChooser;
-        has VBox;
+        widget Window;
+        widget Dialog;
+        widget FileChooser;
+        widget VBox;
     };
 
-=head2 has
+=head2 widget
 
 This function creates the Gtk2 widget.
 In fact when you use this, C<< Gtk2::XXX->new >> will be called.
@@ -231,30 +231,30 @@ See L<Gtk2> and Gtk2 API reference.
 Following code will call C<< Gtk2::Window->new >>.
 
     my $app = build {
-        has Window;
+        widget Window;
     };
 
 If you need more children widgets,
-use C<with>, then call C<has> again and again.
+use C<with>, then call C<widget> again and again.
 
     my $app = build {
-        has Window with => {
-            has HBox => with {
-                has Button;
-                has Button;
-                has Button;
+        widget Window with => {
+            widget HBox => with {
+                widget Button;
+                widget Button;
+                widget Button;
             };
         };
     };
 
 If you have to use more parameters for constructor,
-then specify additional parameters after the C<has> block.
+then specify additional parameters after the C<widget> block.
 Following code create L<Gtk2::SimpleList> with
 additional C<timestamp>, C<nick> and C<message> parameter.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        has SimpleList => with {
+        widget SimpleList => with {
             meta id              => 'logviewer';
             set  headers_visible => FALSE;
             set  rules_hint      => TRUE;
@@ -277,16 +277,16 @@ C<id> is used for C<widget> method to find widget.
 C<packing> is used for L<Gtk2::VBox> and L<Gtk2::HBox>.
 
     my $app = build {
-        has Window => with {
+        widget Window => with {
             meta id             => 'window';
             set  title          => 'Seoul.pm irc log viewer';
         };
     
-        has HBox => with {
+        widget HBox => with {
             meta id      => 'hbox';
             meta packing => TRUE, TRUE, 1, 'start';
     
-            has ScrolledWindow => with {
+            widget ScrolledWindow => with {
                 set policy => 'never', 'automatic';
             };
         };
@@ -299,14 +299,14 @@ Actually it is same as C<< $widget->signal_connect >>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        has Window => with {
+        widget Window => with {
             on   delete_event => sub { Gtk2->main_quit };
-            has VBox => with {
-                has ToggleButton => with {
+            widget VBox => with {
+                widget ToggleButton => with {
                     set  label   => "show/hide";
                     on   toggled => \&toggled;
                 };
-                has Button => with {
+                widget Button => with {
                     set  label   => 'Quit';
                     on   clicked => sub { Gtk2->main_quit };
                 };
@@ -321,7 +321,7 @@ Actually it is same as C<< $widget->set_xxx >>.
 See L<Gtk2> and Gtk2 API reference.
 
     my $app = build {
-        has Window => with {
+        widget Window => with {
             set  title        => 'Awesome App';
             set  default_size => 200, 100;
             set  position     => 'center';
@@ -335,11 +335,11 @@ connect signal, add additional information or
 contain children widgets.
 
     my $app = build {
-        has Window => with {
-            meta ...
-            set  ...
-            on   ...
-            has  ...
+        widget Window => with {
+            meta   ...
+            set    ...
+            on     ...
+            widget ...
         };
     };
 

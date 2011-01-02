@@ -1,5 +1,10 @@
 Revision history for Acme-Gtk2-Ex-Builder
 
+0.004     2011-01-03 01:19:43 Asia/Seoul
+    - API changed due to name conflict with Moose
+        - 'has'    -> 'widget'
+        - 'widget' -> 'find'
+
 0.003     2011-01-02 15:22:50 Asia/Seoul
     - Add omitted version number
     - Set encoding for document

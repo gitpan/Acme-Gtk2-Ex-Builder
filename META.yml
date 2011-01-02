@@ -19,4 +19,4 @@ requires:
   perl: 5.010
 resources:
   repository: http://github.com/keedi/Acme-Gtk2-Ex-Builder.git
-version: 0.003
+version: 0.004
