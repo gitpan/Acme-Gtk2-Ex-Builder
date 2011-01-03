@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Acme::Gtk2::Ex::Builder;
 BEGIN {
-  $Acme::Gtk2::Ex::Builder::VERSION = '0.005';
+  $Acme::Gtk2::Ex::Builder::VERSION = '0.006';
 }
 # ABSTRACT: Funny Gtk2 Interface Design Module
 
@@ -109,12 +109,13 @@ sub build (&) {
             $self->{_info}{$self->_current}{$key} = \@values;
         };
  
-        local *_on = sub ($&) {
+        local *_on = sub {
             my $signal = shift;
             my $_code  = shift;
+            my $data   = shift;
  
             if ($self->_current) {
-                $self->_current->signal_connect( $signal => $_code );
+                $self->_current->signal_connect( $signal => $_code, $data );
             }
         };
  
@@ -165,7 +166,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
 =head1 SYNOPSIS
 

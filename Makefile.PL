@@ -25,7 +25,7 @@ my %WriteMakefileArgs = (
     'Exporter' => '0',
     'Gtk2::SimpleList' => '0'
   },
-  'VERSION' => '0.005',
+  'VERSION' => '0.006',
   'test' => {
     'TESTS' => 't/*.t'
   }

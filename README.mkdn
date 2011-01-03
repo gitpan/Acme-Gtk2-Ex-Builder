@@ -4,7 +4,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 # VERSION
 
-version 0.005
+version 0.006
 
 # SYNOPSIS
 
