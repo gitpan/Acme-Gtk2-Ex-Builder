@@ -15,8 +15,7 @@ meta-spec:
 name: Acme-Gtk2-Ex-Builder
 requires:
   Exporter: 0
-  Gtk2::SimpleList: 0
   perl: 5.010
 resources:
   repository: http://github.com/keedi/Acme-Gtk2-Ex-Builder.git
-version: 0.006
+version: 0.007

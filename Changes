@@ -1,5 +1,9 @@
 Revision history for Acme-Gtk2-Ex-Builder
 
+0.007     2011-01-04 11:26:27 Asia/Seoul
+    - Remove needless 'require' statement
+    - Support prebuilt widget variable
+
 0.006     2011-01-03 11:52:50 Asia/Seoul
     - signal_connect: Allow additional data for callback
 

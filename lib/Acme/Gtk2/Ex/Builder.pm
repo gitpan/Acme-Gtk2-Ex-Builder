@@ -3,7 +3,7 @@ use strict;
 use warnings;
 package Acme::Gtk2::Ex::Builder;
 BEGIN {
-  $Acme::Gtk2::Ex::Builder::VERSION = '0.006';
+  $Acme::Gtk2::Ex::Builder::VERSION = '0.007';
 }
 # ABSTRACT: Funny Gtk2 Interface Design Module
 
@@ -66,14 +66,13 @@ sub build (&) {
         my $_code  = shift;
         my @params = @_;
  
-        given ($class) {
-            when ('SimpleList') {
-                require Gtk2::SimpleList;
-            }
-            default {
-            }
+        my $widget;
+        if (ref($class) && $class->isa("Gtk2::Widget")) {
+            $widget = $class;
         }
-        my $widget = "Gtk2::$class"->new(@params);
+        else {
+            $widget = "Gtk2::$class"->new(@params);
+        }
  
         if ($self->_current && ref($self->_current) ne __PACKAGE__) {
             given (ref $self->_current) {
@@ -166,7 +165,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 =head1 VERSION
 
-version 0.006
+version 0.007
 
 =head1 SYNOPSIS
 

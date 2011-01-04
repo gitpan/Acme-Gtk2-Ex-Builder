@@ -22,10 +22,9 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'Acme::Gtk2::Ex::Builder',
   'PREREQ_PM' => {
-    'Exporter' => '0',
-    'Gtk2::SimpleList' => '0'
+    'Exporter' => '0'
   },
-  'VERSION' => '0.006',
+  'VERSION' => '0.007',
   'test' => {
     'TESTS' => 't/*.t'
   }
