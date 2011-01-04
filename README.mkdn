@@ -4,7 +4,7 @@ Acme::Gtk2::Ex::Builder - Funny Gtk2 Interface Design Module
 
 # VERSION
 
-version 0.007
+version 0.008
 
 # SYNOPSIS
 
@@ -96,6 +96,10 @@ Following code create [Gtk2::SimpleList](http://search.cpan.org/perldoc?Gtk2::Si
 additional `timestamp`, `nick` and `message` parameter.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
+    use Gtk2;
+    use Gtk2::SimpleList; # Do NOT forgot!!
+    
+
     my $app = build {
         widget SimpleList => contain {
             info id              => 'logviewer';
@@ -106,6 +110,27 @@ See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
             nick      => 'markup',
             message   => 'markup',
         );
+    };
+
+It also supports prebuilt widget.
+
+    my $prev_button = Gtk2::Button->new('Prev');
+    my $next_button = Gtk2::Button->new('Next');
+    my $quit_button = Gtk2::Button->new;
+    
+
+    my $app = build {
+        widget VBox => contain {
+            widget HBox => contain {
+                widget $prev_button;
+                widget $next_button;
+            };
+            widget $next_button => contain {
+                info packing => TRUE, TRUE, 1, 'end';
+                set  label   => 'quit';
+                on   clicked => \&quit_clicked;
+            }
+        };
     };
 
 ## info
@@ -161,8 +186,8 @@ See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
 ## set
 
-This function sets properties for specified widget.
-Actually it is same as `$widget->set_xxx`.
+This function calls `$widget->set_KEY(VALUE)` function
+for specified widget.
 See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
 
     my $app = build {
@@ -173,16 +198,34 @@ See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
         };
     };
 
+## prop
+
+This function sets properties for specified widget.
+Actually it is same as `$widget->set(KEY, VALUE)`.
+See [Gtk2](http://search.cpan.org/perldoc?Gtk2) and Gtk2 API reference.
+
+    my $app = build {
+        widget Window => contain {
+            info id               => 'window';
+            set  position         => 'center';
+            prop title            => 'Window Example';
+            prop opacity          => 0.8;
+            prop 'default-width'  => 640;
+            prop 'default-height' => 480;
+            on   delete_event     => \&quit;
+        };
+    };
+
 ## contain
 
-This function is used to set attributes,
-connect signal, add additional information or
-contain children widgets.
+This function is used to set attributes, set properties,
+connect signal, add additional information or contain children widgets.
 
     my $app = build {
         widget Window => contain {
             info   ...
             set    ...
+            prop   ...
             on     ...
             widget ...
         };
